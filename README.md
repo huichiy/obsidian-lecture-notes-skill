@@ -1,4 +1,4 @@
-# lecture-notes
+# Obsidian Lecture Notes Skill
 
 A [Claude Skill](https://docs.claude.com) that turns raw lecture material (PDFs, slide decks, screenshots, or pasted text) into structured Obsidian notes — with Mermaid diagrams, wikilinks for Graph View, YAML frontmatter, flashcards, and a cheat sheet.
 
@@ -40,7 +40,7 @@ This skill automates the second approach. Upload a lecture → get back an Obsid
 
 ## Installation
 
-1. Download `lecture-notes.skill` from the [latest release](<!-- TODO: link -->).
+1. Download `lecture-notes.skill` from this repo (click the file in the file list, then the **Download raw file** button).
 2. In claude.ai, click **+** → **Skills** → **Add skill** → upload the file.
 3. Confirm `lecture-notes` is toggled on in the Skills menu.
 
