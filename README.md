@@ -31,6 +31,7 @@ This skill automates the second approach. Upload a lecture → get back an Obsid
 - **Strict YAML self-check** before delivery — prevents the common one-line-jam bug that breaks Obsidian Properties.
 - **Anti-import rule** — when given a sample note from a different subject as a style reference, copies structure only, not diagrams or content. Stops cross-subject pollution.
 - **Graph View optimization** — 8-20 wikilinks per note minimum, MOC backlinks, prev/next chaining between lectures.
+- **Universal MOC template** with Dataview queries that auto-populate across subjects — one template works for every subject, no manual list maintenance.
 
 ## Requirements
 
@@ -42,7 +43,7 @@ This skill automates the second approach. Upload a lecture → get back an Obsid
 
 ### Option 1 — from a release (recommended)
 
-1. Download `lecture-notes.skill` from the [latest release](https://github.com/YOUR_USERNAME/obsidian-lecture-notes/releases/latest).
+1. Download `lecture-notes.skill` from the [latest release](https://github.com/huichiy/obsidian-lecture-notes-skill/releases/latest).
 2. In claude.ai, click **+** → **Skills** → **Add skill** → upload the file.
 3. Confirm `lecture-notes` is toggled on in the Skills menu.
 
@@ -72,7 +73,26 @@ Vault/
 └── ...
 ```
 
-A MOC (Map of Content) template is included in `templates/`.
+A MOC (Map of Content) template is included in `templates/`. See the next section to set one up per subject.
+
+### Set up a subject MOC (one-time per subject)
+
+The repo includes a universal `templates/subject-MOC-template.md` that uses [Dataview](https://github.com/blacksmithgu/obsidian-dataview) queries to auto-populate as you add lecture notes. **One template works for every subject** — no need to duplicate logic per course.
+
+1. Copy `subject-MOC-template.md` into your vault
+2. Rename it to match your subject — e.g., `OOAD - MOC.md`, `DSF - MOC.md`. This exact format matters because every lecture note's footer links to `[[SUBJECT-CODE - MOC]]`.
+3. Open the file, change `subject: SUBJECT_CODE` in the YAML to your actual subject code (e.g., `subject: OOAD`)
+4. Replace `[Subject Full Name]` in the H1 heading
+5. Save
+
+From then on, every lecture note you save with matching `subject:` YAML automatically appears in the MOC. The template includes:
+
+- **Auto-listed lectures table** (sorted by lecture number, with topic, exam weight, and status columns)
+- **Exam-priority filter** — shows only lectures flagged `exam_weight: high`
+- **Revision status tracker** — groups lectures by `draft` / `reviewed` / `complete`
+- **Concept frequency view** — counts how often each `[[wikilink]]` appears across the subject's lectures. Concepts mentioned in 5+ lectures are almost certainly exam-important — this is the data equivalent of what Graph View shows visually.
+
+If you don't use Dataview, the template still works as a manual hub page — just edit the lecture list by hand.
 
 ## Customization
 
