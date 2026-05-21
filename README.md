@@ -40,9 +40,15 @@ This skill automates the second approach. Upload a lecture → get back an Obsid
 
 ## Installation
 
-1. Download `lecture-notes.skill` from this repo (click the file in the file list, then the **Download raw file** button).
+### Option 1 — from a release (recommended)
+
+1. Download `lecture-notes.skill` from the [latest release](https://github.com/YOUR_USERNAME/obsidian-lecture-notes/releases/latest).
 2. In claude.ai, click **+** → **Skills** → **Add skill** → upload the file.
 3. Confirm `lecture-notes` is toggled on in the Skills menu.
+
+### Option 2 — directly from the repo
+
+If you want the absolute latest version (between releases), download `lecture-notes.skill` from the repo file list (click the file, then the **Download raw file** button), then follow steps 2-3 above.
 
 The skill is now available across every chat and project on your account.
 
@@ -121,9 +127,7 @@ lecture-notes/
 ├── SKILL.md                       ← the skill itself
 ├── templates/
 │   └── subject-MOC-template.md
-├── examples/
-│   └── example-output.md          ← <!-- TODO: add a sample generated note -->
-├── lecture-notes.skill            ← packaged skill (release artifact)
+├── lecture-notes.skill            ← packaged skill
 └── README.md
 ```
 
