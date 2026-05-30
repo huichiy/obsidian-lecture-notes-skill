@@ -168,7 +168,7 @@ The skill produces plain `.md` / `.canvas` / `.base` / `.css` files, so it works
 - Obsidian 1.9+ (Bases is built in; `.base` files won't render on earlier versions)
 
 **Strongly recommended**
-- [Advanced Canvas](https://github.com/Developer-Mike/obsidian-advanced-canvas) — better canvas rendering (presentations, portals, flow nodes). Used by the `.canvas` outputs.
+- [Advanced Canvas](https://github.com/Developer-Mike/obsidian-advanced-canvas) — better canvas rendering (presentations, portals, flow nodes). Used by the `.canvas` outputs. **Enables dotted lines on weak cross-reference edges** in Knowledge Maps and Exam Maps — strongly recommended.
 - [Canvas Mindmap](https://github.com/quorafind/Obsidian-Canvas-MindMap) — auto-layout helper for Canvas hierarchies.
 - [Optimize Canvas Connections](https://github.com/felixchenier/obsidian-optimize-canvas-connections) — keeps edges from crossing chaotically.
 - [Style Settings](https://github.com/mgmeyers/obsidian-style-settings) — exposes the concept-level CSS variables (colors, pill shape) in Obsidian's settings UI. Without it, edit `concept-levels.css` directly.

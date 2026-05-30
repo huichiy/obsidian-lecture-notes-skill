@@ -1,9 +1,7 @@
 filters:
   and:
-    - file.hasProperty("subject")
-    - file.subject == "{{SUBJECT}}"
-    - file.hasProperty("type")
-    - file.type == "lecture-notes"
+    - subject == "{{SUBJECT}}"
+    - type == "lecture-notes"
 properties:
   file.name:
     displayName: Lecture

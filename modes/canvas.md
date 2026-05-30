@@ -98,9 +98,27 @@ Two edge types in the `edges` array.
 ### Weak edges — cross-reference
 - Source: any node
 - Target: any node (no self-loops)
-- Dashed line via `"color": "5"` (cyan) — Obsidian will render thinner / different.
+- Color: `"5"` (cyan) — distinguishes from strong (default-color) edges
+- **Style: dotted line** via Advanced Canvas plugin attribute:
+  ```json
+  "styleAttributes": { "path": "dotted" }
+  ```
+  If the user has the [Advanced Canvas](https://github.com/Developer-Mike/obsidian-advanced-canvas) plugin installed, the line renders as dotted. Without the plugin, the attribute is silently ignored (vanilla Obsidian Canvas just shows a solid cyan line) — graceful degradation.
 - Detected from: a wikilink in the source file's body pointing to another file in scope, *that isn't already a strong edge*.
 - Cap at **5 weak edges per node** to prevent visual chaos. If more, keep the ones to highest-`exam_weight` targets.
+
+#### Weak-edge JSON example
+```json
+{
+  "id": "e-boxplot-iqr",
+  "fromNode": "atomic-box-plot",
+  "fromSide": "right",
+  "toNode": "atomic-iqr",
+  "toSide": "left",
+  "color": "5",
+  "styleAttributes": { "path": "dotted" }
+}
+```
 
 ## Layout — hierarchical tree, left-to-right
 
