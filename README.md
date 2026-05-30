@@ -4,7 +4,14 @@ A [Claude Skill](https://docs.claude.com) that turns raw lecture material (PDFs,
 
 Built for university students who use Claude + Obsidian as their study stack. Packaged as a folder-format skill for **Claude Code**.
 
-<!-- TODO: add a screenshot here of a generated note rendered in Obsidian -->
+<!-- screenshot suggestions:
+  - Generated lecture note rendered in Obsidian (showing concept block + mermaid diagram)
+  - Exam Map canvas with dotted weak edges + Confident/Weak/Notes zones
+  - Tracker (Bases) view with 5 view tabs
+  - Concept-level CSS pills (#level/1 #level/2 #level/3) on an atomic note
+-->
+
+📁 **See [`examples/`](examples/) for sample outputs · [`docs/`](docs/) for workflow & design rationale · [`CHANGELOG.md`](CHANGELOG.md) for version history.**
 
 ---
 
@@ -206,6 +213,15 @@ obsidian-lecture-notes-skill/
 │   └── subject-tracker-template.base     ← database view (used by tracker mode)
 ├── styles/
 │   └── concept-levels.css                ← pill styling for #level/1/2/3 tags
+├── examples/
+│   ├── sample-lecture-note.md            ← real GENERATE output (EDA lecture)
+│   ├── sample-atomic-concept.md          ← real atomic note (Box Plot)
+│   └── sample-canvas.canvas              ← Exam Map structure illustrated
+├── docs/
+│   ├── workflow.md                       ← 5-stage study cycle, mode usage
+│   ├── design-rationale.md               ← why router + modes, why content-type rules, etc.
+│   └── roadmap.md                        ← v1.3 planning + out-of-scope items
+├── CHANGELOG.md
 ├── LICENSE
 └── README.md
 ```

@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {"id":"moc","type":"text","text":"# DSF — Exam Map (example)\n\n4 lectures · 28 atomic concepts\nAll `exam_weight: high`","x":-200,"y":0,"width":400,"height":200,"color":"6"},
+    {"id":"lec-04","type":"text","text":"# DSF Lec 04\n\nExploratory Data Analysis\n\n(in real vault this would be a file: node)","x":500,"y":0,"width":400,"height":300,"color":"1"},
+    {"id":"atom-boxplot","type":"text","text":"# Box Plot\n\nlevel: 2","x":1100,"y":0,"width":300,"height":200,"color":"2"},
+    {"id":"atom-iqr","type":"text","text":"# IQR\n\nlevel: 2","x":1450,"y":0,"width":300,"height":200,"color":"2"},
+    {"id":"atom-normal","type":"text","text":"# Normal Distribution\n\nlevel: 1","x":1100,"y":250,"width":300,"height":200,"color":"2"},
+    {"id":"atom-skew","type":"text","text":"# Skewness\n\nlevel: 2","x":1450,"y":250,"width":300,"height":200,"color":"2"},
+    {"id":"zone-confident","type":"text","text":"# ✅ Confident\n\nConcepts I've nailed","x":500,"y":700,"width":500,"height":250,"color":"4"},
+    {"id":"zone-weak","type":"text","text":"# ⚠️ Weak\n\nReview these","x":1200,"y":700,"width":500,"height":250,"color":"1"}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"moc","fromSide":"right","toNode":"lec-04","toSide":"left"},
+    {"id":"e2","fromNode":"lec-04","fromSide":"right","toNode":"atom-boxplot","toSide":"left"},
+    {"id":"e3","fromNode":"lec-04","fromSide":"right","toNode":"atom-iqr","toSide":"left"},
+    {"id":"e4","fromNode":"lec-04","fromSide":"right","toNode":"atom-normal","toSide":"left"},
+    {"id":"e5","fromNode":"lec-04","fromSide":"right","toNode":"atom-skew","toSide":"left"},
+    {"id":"e6","fromNode":"atom-boxplot","fromSide":"bottom","toNode":"atom-iqr","toSide":"top","color":"5","styleAttributes":{"path":"dotted"}},
+    {"id":"e7","fromNode":"atom-normal","fromSide":"right","toNode":"atom-skew","toSide":"left","color":"5","styleAttributes":{"path":"dotted"}}
+  ]
+}
