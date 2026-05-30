@@ -336,11 +336,19 @@ Concepts in this lecture:
 
 **If user picks some/all**: for each chosen concept, create a short atomic note (under `concepts/` in their vault if known, otherwise alongside the lecture note). Each atomic note contains:
 
-- YAML with `type: concept`, `subject:`, `level:` (1/2/3 — your estimate based on how foundational it is), `parent:` (the lecture or higher concept), `tags:`
+- YAML with `type: concept`, `subject:`, `level:` (1/2/3 — your estimate based on how foundational it is), `parent:`, `tags:`
 - 2-3 sentence definition (the plain-English intro from the lecture note's 6-block)
 - The diagram for this concept (copied from the lecture note)
 - A `## Mentioned in` section listing wikilinks back to lecture notes that reference this concept (currently just this lecture; user / future runs will add more)
 - A `## Related concepts` section with sibling wikilinks
+
+**`parent:` rules** — critical for cross-linking to work in Obsidian:
+
+- Set `parent:` to a wikilink whose target is the **exact filename of the just-saved lecture note** (without the `.md` extension).
+- Example: if the lecture note was saved as `DSF Lec 04 — Exploratory Data Analysis (new).md`, then atomic notes must use:
+  `parent: "[[DSF Lec 04 — Exploratory Data Analysis (new)]]"`
+- Do **NOT** invent a "cleaner" wikilink name (e.g. dropping the `(new)` suffix or matching an older filename). The parent wikilink must resolve to a file that actually exists in the vault — typically the file you just wrote.
+- The `## Mentioned in` section follows the same rule: wikilinks point to the exact filename of the source lecture, not a guess.
 
 Filename: `[Concept Name].md` (Title Case, as it appears in wikilinks).
 

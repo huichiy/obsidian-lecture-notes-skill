@@ -87,7 +87,14 @@ If a concept appears in multiple lectures, list each — don't deduplicate (the 
 
 ### 5. Formula list
 
-Extract every LaTeX formula (`$$...$$` block or inline `$...$`). Group by lecture. Include the surrounding 1-line context if the formula has a name or variable legend nearby.
+Extract every LaTeX formula. Group by lecture. Include the surrounding 1-line context if the formula has a name or variable legend nearby.
+
+**Extraction rules — to avoid false positives:**
+
+- **Prefer `$$...$$` blocks** — these are unambiguous LaTeX.
+- For inline `$...$`, **only include** if the content contains at least one LaTeX-only character: `\` (backslash), `_` (subscript), `^` (superscript), `{` / `}` (groups), `\frac`, `\sum`, `\sqrt`, Greek letters (`\sigma`, `\mu`, etc.), or `=` paired with a symbolic variable.
+- **Reject** patterns that look like currency or plain prose: `$80k`, `$1.2M`, `$58k, median = $90k`, `$variable_name` (a single identifier with no math operators), or anything where both delimiters fall within the same sentence without LaTeX content between them.
+- **Reject** single-letter bare variables (`$x$`, `$N$`) when they appear without an equation around them — they're usually inline references, not formulas.
 
 ```
 ## 📐 Formulas

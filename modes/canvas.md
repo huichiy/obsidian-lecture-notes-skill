@@ -30,18 +30,25 @@ If ambiguous, ask once.
 
 ## Pre-flight check
 
-Before generating, count atomic concept notes for the subject. If **< 5 atomic notes** exist, **warn the user**:
+Before generating, count atomic concept notes for the subject. If **< 5 atomic notes** exist, **stop and ask the user explicitly** — do not assume consent and proceed silently:
 
-> "Only {N} atomic concept notes exist for {SUBJECT}. The canvas will be sparse — most lectures won't have child concept nodes. Recommended: extract more atomic notes first (re-run GENERATE on past lectures and accept atomic extraction), then generate the canvas. Continue anyway? (yes / no)"
+> "⚠️ Only {N} atomic concept notes exist for {SUBJECT}. The canvas will be sparse — most lectures won't have child concept nodes. Recommended: extract more atomic notes first (re-run GENERATE on past lectures and accept atomic extraction), then generate the canvas.
+>
+> Continue anyway? (yes / no)"
 
-If yes → proceed. If no → end the turn cleanly.
+**Wait for the user's explicit "yes" in the chat** before generating. If no / no response / they pick something else → end the turn cleanly without creating any files.
 
 ## Node design
 
 Three node types. Each `.canvas` node is a JSON object inside the `nodes` array.
 
 ### MOC node (1 per canvas, root)
-- `type: "file"`, points to `{SUBJECT} - MOC.md`
+- If a `{SUBJECT} - MOC.md` exists in the scope:
+  - `type: "file"`, points to it
+- If **no MOC file exists** (e.g. a test folder, or a fresh subject the user hasn't built an MOC for):
+  - `type: "text"` placeholder
+  - Body: `# {SUBJECT}\n\nKnowledge Map — {scope description}\n{N} lectures · {N} atomic concepts`
+  - Note in the closing message that the user can create a real MOC later and re-run canvas.
 - Width 400, Height 200
 - Position: `x: 0, y: 0` (anchor)
 - Color: `"6"` (purple, distinctive)
