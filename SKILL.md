@@ -14,8 +14,8 @@ Match the user's request against these triggers, in order:
 | Trigger | Mode | File to read |
 |---|---|---|
 | User uploaded lecture file(s) (PDF/PPT/PPTX/PNG/screenshots), OR mentioned a new lecture / chapter / class to process, OR pasted lecture text | **GENERATE** | `modes/generate.md` |
-| "lint", "check my notes", "audit", "health check", "validate", "find issues in my [subject] notes" | **LINT** | `modes/lint.md` |
-| "canvas", "visual map", "knowledge graph", "make a canvas for [subject]", "concept map" | **CANVAS** | `modes/canvas.md` |
+| "lint", "check", "audit", "health check", "validate", "rate", "find issues in my [subject] notes", "检查", "审一下", "体检", "评分" | **LINT** | `modes/lint.md` |
+| "canvas", "visual map", "knowledge graph", "concept map", "画图", "知识图谱", "make a canvas / mindmap for [subject]" (no lecture file uploaded) | **CANVAS** | `modes/canvas.md` |
 | "exam pack", "revision pack", "summarize Lec X to Y", "exam revision for [subject]", "consolidate lectures N-M" | **REVISION** | `modes/revision.md` |
 
 ## Routing rules
