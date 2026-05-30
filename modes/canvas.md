@@ -2,6 +2,17 @@
 
 Build a static `.canvas` JSON file that gives the user a **subject-level visual map** of their lecture notes and atomic concept notes. Canvas is *not* a replacement for Obsidian's built-in Graph View (which is force-directed and dynamic) — it's a curated, hierarchical, hand-organizable map for revision.
 
+## Two variants
+
+This mode produces **two distinct canvas types**. Detect which from the user's wording:
+
+| Variant | Trigger keywords | Goal |
+|---|---|---|
+| **Knowledge Map** (default) | "canvas", "knowledge graph", "concept map", "visual map", "知识图谱" | Complete subject overview: MOC + every lecture + every atomic concept, hierarchical |
+| **Exam Map** | "exam canvas", "exam map", "exam revision canvas", "revision map", "考前 canvas", "考试地图" | Focused revision view: only `exam_weight: high` lectures + only high-frequency atomic concepts, with white-space regions reserved for hand-written annotations |
+
+If ambiguous, ask: *"Two variants — Knowledge Map (all concepts) or Exam Map (only exam-priority concepts)? Default is Knowledge Map."*
+
 ## Scope rules
 
 - **Subject-level only.** Do not generate per-lecture canvases — they overlap with the opening `mindmap` already inside the lecture note.
@@ -181,6 +192,43 @@ Obsidian Canvas is JSON. Minimal schema:
 ```
 
 Use **stable, deterministic `id`s** (e.g. `lec-04`, `atomic-{kebab-case-title}`) so re-runs don't churn diffs.
+
+## Exam Map variant — differences from Knowledge Map
+
+When generating the Exam Map variant, apply these overrides to everything above:
+
+### Filter the nodes
+
+- **Lecture nodes:** include only those with `exam_weight: high`. Skip `medium` and `low`.
+- **Atomic concept nodes:** include only those whose `parent` is a kept lecture OR that are referenced by 3+ lectures (cross-lecture importance signal). Skip the rest.
+- **MOC node:** always include (as anchor).
+- **Edges:** only keep edges where both endpoints are kept.
+
+### Filename
+
+`{vault_root}/{subject_folder}/Canvas/{SUBJECT} - Exam Map.canvas` (different from Knowledge Map's filename, so they coexist).
+
+### Layout adjustments
+
+- **More vertical space** between lecture nodes: y-step of **500** instead of 350 — leaves whitespace for handwriting in Obsidian Canvas's freeform regions.
+- **Add 3 placeholder text nodes** at the bottom of the canvas (below the last lecture's y-coordinate, +500 gap):
+  - Color `"3"` (yellow) — `"📝 Notes — write here as you revise"`
+  - Color `"4"` (green) — `"✅ Confident — concepts I've nailed"`
+  - Color `"1"` (red) — `"⚠️ Weak — review these"`
+- These placeholders give the user explicit zones to drag concept nodes into during revision.
+
+### Color emphasis
+
+In the Exam Map, since everything kept is already high-priority, use:
+- Lectures: `"1"` (red) uniformly
+- Atomic concepts inheriting from kept lectures: `"2"` (orange) — visual contrast from the red lectures
+- The 3 zone placeholders: per their colors above
+
+### Closing message override
+
+For Exam Map specifically, close with:
+
+> "Saved Exam Map to {path}. This view contains only `exam_weight: high` content for {SUBJECT}. Drag concepts into the **Confident** / **Weak** / **Notes** zones at the bottom as you revise — it doubles as your study tracker."
 
 ## Execution order
 

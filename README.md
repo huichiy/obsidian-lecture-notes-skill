@@ -33,7 +33,9 @@ This skill automates the second approach. Upload a lecture → get back an Obsid
 - **Graph View optimization** — 8-20 wikilinks per note minimum, MOC backlinks, prev/next chaining between lectures.
 - **Universal MOC template** with Dataview queries that auto-populate across subjects — one template works for every subject, no manual list maintenance.
 - **Atomic concept notes (on-demand)** — after generating a lecture note, the skill offers to extract individual concept files for cross-lecture linking and Canvas use. Opt-in per lecture, no auto-pollution.
-- **Router architecture** — main entry plus pluggable modes (`generate`, `lint`, `canvas`, `revision`). Currently only `generate` is fully implemented; the others are stubs reserved for upcoming releases.
+- **Six pluggable modes** — `generate` (lecture → note), `lint` (audit + interactive auto-fix), `canvas` (knowledge map or exam map), `revision` (multi-lecture exam pack), `tracker` (Obsidian Bases database view), `extract-atomic` (backfill atomic concepts from past lectures).
+- **Bases-ready** — every YAML field (`subject`, `lecture`, `exam_weight`, `status`, etc.) is selected to power Obsidian 1.9+ Bases queries out of the box. A universal `subject-tracker-template.base` is included.
+- **CSS snippet** — optional pill styling for `#level/1` / `#level/2` / `#level/3` (and `#一级` / `#二级` / `#三级`) concept tags. Install once, all concept notes get the visual hierarchy.
 
 ## Requirements
 
@@ -71,15 +73,19 @@ If it doesn't auto-trigger, just say:
 
 The output is a single `.md` file dropped into your Obsidian vault. After delivery, the skill offers to extract atomic concept notes — say which ones (or `all` / `no`) to opt in per lecture.
 
-### Other modes (planned)
+### All available modes (v1.2)
 
-The skill description also covers three additional modes that are stub-only in v1.1:
+| Mode | Trigger phrases | What it does |
+|---|---|---|
+| **GENERATE** | Upload a lecture, "process this", "make notes from this" | Convert lecture material → structured Obsidian note. Default mode when a file is attached. |
+| **LINT** | "lint my notes", "check OOAD notes", "audit", "rate my vault", "检查", "审一下" | Run 12 health checks → markdown report → offer interactive auto-fix for safe issues. |
+| **CANVAS** (Knowledge Map) | "canvas for DSF", "knowledge graph", "concept map", "知识图谱" | Emit a `.canvas` file: MOC + every lecture + every atomic concept, hierarchical. |
+| **CANVAS** (Exam Map) | "exam canvas", "exam map", "revision map", "考前 canvas" | Same generator, filtered to `exam_weight: high` only, with built-in **Confident / Weak / Notes** zones for revision. |
+| **REVISION** | "exam pack for OOAD Lec 3-7", "revision pack", "复习包" | Consolidate multiple lectures into one revision document (TLDRs, formulas, flashcards, self-test). |
+| **TRACKER** | "tracker for DSF", "make a tracker", "进度表", "dashboard" | Generate an Obsidian Bases (`.base`) file with 5 views: all lectures / exam priority / still to revise / done / cards. |
+| **EXTRACT-ATOMIC** | "extract atomic for OOAD", "backfill atomic notes", "补 atomic" | Scan existing lecture notes and create atomic concept notes retroactively — no PDF re-processing. |
 
-- **Lint** — say *"lint my OOAD notes"* / *"audit my vault"* to validate YAML, wikilinks, MOC backlinks, flashcard counts, etc.
-- **Canvas** — say *"make a canvas for OOAD"* / *"knowledge graph for [subject]"* to emit a `.canvas` JSON map of the subject.
-- **Revision pack** — say *"exam pack for OOAD Lec 3-7"* to consolidate multiple lectures into one revision document.
-
-Currently each of these will pause and ask you to design the rules before running. Real implementations land in upcoming releases.
+All modes are subject-agnostic: name your subject (OOAD, DSF, STAT, PSY, HIST, MED…) and the skill adapts.
 
 ### Recommended vault structure
 
@@ -112,6 +118,28 @@ From then on, every lecture note you save with matching `subject:` YAML automati
 
 If you don't use Dataview, the template still works as a manual hub page — just edit the lecture list by hand.
 
+## Changelog
+
+**v1.2 (current)**
+- New mode: **TRACKER** — generate `.base` database view from universal template, AI auto-detects subject.
+- New mode: **EXTRACT-ATOMIC** — backfill atomic concept notes from already-generated lecture notes without re-processing PDFs.
+- **CANVAS** gains the Exam Map variant — filters to `exam_weight: high` only and adds Confident / Weak / Notes annotation zones.
+- **LINT** gains interactive auto-fix — `all` / `safe-only` / pick-by-number, with preview diffs before applying.
+- New CSS snippet `styles/concept-levels.css` for `#level/1` / `#level/2` / `#level/3` pill styling (Style Settings compatible).
+- New template `templates/subject-tracker-template.base`.
+- README expanded with mode reference table, plugin recommendations, and CSS install instructions.
+
+**v1.1**
+- Restructure to router + modes pattern. SKILL.md becomes a dispatcher.
+- New modes (implementations, not stubs): LINT, CANVAS (Knowledge Map only), REVISION.
+- Content-type conventions replace subject-keyed domain rules — works for humanities, medicine, history, etc.
+- Opt-in atomic concept note extraction at the end of GENERATE.
+- Switch from `.skill` bundle format to Claude Code folder format.
+- v1.1 fixes from first end-to-end test: revision-mode formula filter, canvas pre-flight confirmation, generate-mode parent-link rule.
+
+**v1.0**
+- Initial single-file `lecture-notes.skill` for claude.ai upload.
+
 ## Customization
 
 This skill is designed to be forked. All rules live in `modes/generate.md`. Common customizations:
@@ -132,39 +160,63 @@ Default fields: `subject`, `course_code`, `lecture`, `title`, `source`, `tags`, 
 
 Create a new file under `modes/`, then add a routing row to `SKILL.md` so Claude knows when to dispatch to it.
 
+## Recommended Obsidian plugins
+
+The skill produces plain `.md` / `.canvas` / `.base` / `.css` files, so it works on a vanilla Obsidian install. These plugins enhance the experience:
+
+**Must-have**
+- Obsidian 1.9+ (Bases is built in; `.base` files won't render on earlier versions)
+
+**Strongly recommended**
+- [Advanced Canvas](https://github.com/Developer-Mike/obsidian-advanced-canvas) — better canvas rendering (presentations, portals, flow nodes). Used by the `.canvas` outputs.
+- [Canvas Mindmap](https://github.com/quorafind/Obsidian-Canvas-MindMap) — auto-layout helper for Canvas hierarchies.
+- [Optimize Canvas Connections](https://github.com/felixchenier/obsidian-optimize-canvas-connections) — keeps edges from crossing chaotically.
+- [Style Settings](https://github.com/mgmeyers/obsidian-style-settings) — exposes the concept-level CSS variables (colors, pill shape) in Obsidian's settings UI. Without it, edit `concept-levels.css` directly.
+
+**Optional**
+- [Dataview](https://github.com/blacksmithgu/obsidian-dataview) — for the MOC template's auto-populated query blocks (works alongside Bases).
+- [Canvas Filter](https://github.com/ikoshelev/obsidian-canvas-filter) — show/hide canvas nodes by tag or color (useful for Exam Maps).
+- [Collapse Node](https://github.com/zachatoo/obsidian-canvas-collapse-node) — collapse canvas cards to title-only.
+
+**Skip**
+- Excalidraw, multiple "Send to back" / "Enhanced" canvas plugins, Zettelflow, Link Exploder — they overlap with built-in features or with each other.
+
 ## How it works
 
 A Claude Skill is a folder containing a `SKILL.md` with YAML frontmatter (`name`, `description`) and markdown instructions. Claude Code reads the description at the start of every session — when a user's input matches what the description claims to handle, the body of the skill loads into context and Claude follows its instructions.
 
-This skill uses a **router + modes** pattern. `SKILL.md` is a small dispatcher that detects which mode the user wants (generate / lint / canvas / revision) and then reads the corresponding file under `modes/`. Each mode file is a self-contained instruction set — so Claude only loads the rules relevant to the current request, and modes can be edited independently without affecting each other.
+This skill uses a **router + modes** pattern. `SKILL.md` is a small dispatcher that detects which mode the user wants (generate / lint / canvas / revision / tracker / extract-atomic) and then reads the corresponding file under `modes/`. Each mode file is a self-contained instruction set — so Claude only loads the rules relevant to the current request, and modes can be edited independently without affecting each other.
 
-The active **GENERATE** mode instructs Claude to:
-
-1. Detect the subject from the lecture material (filename, course code, or content)
-2. Apply a strict output structure: YAML → title → TLDR → Lecture Map → mindmap → TOC → per-concept blocks → flashcards → footer
-3. Pick diagrams from a decision table tied to concept types, not defaults
-4. Apply content-type rules (formulas / algorithms / timelines / schools of thought / case studies / etc.)
-5. Densely wikilink concepts so Obsidian Graph View becomes informative
-6. Run a self-check before delivering the file
-7. Offer atomic concept-note extraction after delivery (opt-in per lecture)
-
-See `modes/generate.md` for the full instruction set.
+See `modes/generate.md` for the GENERATE rules; the other mode files document their own behavior in the same format.
 
 ## Project structure
 
 ```
 obsidian-lecture-notes-skill/
-├── SKILL.md                       ← router (mode detection)
+├── SKILL.md                              ← router (mode detection)
 ├── modes/
-│   ├── generate.md                ← lecture material → Obsidian note (active)
-│   ├── lint.md                    ← health-check notes (stub)
-│   ├── canvas.md                  ← generate .canvas knowledge map (stub)
-│   └── revision.md                ← exam revision pack (stub)
+│   ├── generate.md                       ← lecture material → Obsidian note
+│   ├── lint.md                           ← health-check + interactive auto-fix
+│   ├── canvas.md                         ← Knowledge Map + Exam Map variants
+│   ├── revision.md                       ← multi-lecture exam pack
+│   ├── tracker.md                        ← Obsidian Bases database view
+│   └── extract-atomic.md                 ← backfill atomic concepts
 ├── templates/
-│   └── subject-MOC-template.md
+│   ├── subject-MOC-template.md           ← curated landing page
+│   └── subject-tracker-template.base     ← database view (used by tracker mode)
+├── styles/
+│   └── concept-levels.css                ← pill styling for #level/1/2/3 tags
 ├── LICENSE
 └── README.md
 ```
+
+## Install the CSS snippet (optional)
+
+```bash
+cp styles/concept-levels.css "/path/to/YourVault/.obsidian/snippets/concept-levels.css"
+```
+
+Then in Obsidian: **Settings → Appearance → CSS snippets** → toggle `concept-levels` ON. If you have the **Style Settings** plugin, you can also tweak the pill colors from the UI.
 
 ## Known limitations
 
@@ -173,7 +225,8 @@ obsidian-lecture-notes-skill/
 - **Large lectures (50+ slides) may need two passes** — process first half → second half → ask for a merged cheat sheet.
 - **Subject detection can mis-fire** on lectures with no filename, course code, or title slide. Provide subject context when needed.
 - **This release targets Claude Code.** The folder format works directly in Claude Code's skills directory. If you need a claude.ai-uploadable bundle (`.skill` file), you'll need to package it yourself — that workflow isn't included in this repo.
-- **Lint, Canvas, and Revision modes are stubs.** They acknowledge your request and pause to design the rules — they don't actually run yet.
+- **Tracker mode requires Obsidian 1.9+.** Bases (`.base` files) won't render on older versions; the tracker mode pre-flight check warns about this.
+- **Auto-fix in Lint mode is opt-in per run.** Risky fixes (vault-wide renames) always show a preview diff before applying — there is no "silent fix" path.
 
 ## Contributing
 

@@ -1,0 +1,83 @@
+filters:
+  and:
+    - file.hasProperty("subject")
+    - file.subject == "{{SUBJECT}}"
+    - file.hasProperty("type")
+    - file.type == "lecture-notes"
+properties:
+  file.name:
+    displayName: Lecture
+  lecture:
+    displayName: "#"
+  title:
+    displayName: Topic
+  exam_weight:
+    displayName: Exam Weight
+  status:
+    displayName: Status
+  created:
+    displayName: Created
+views:
+  - type: table
+    name: All lectures
+    order:
+      - lecture
+      - file.name
+      - title
+      - exam_weight
+      - status
+      - created
+    sort:
+      - property: lecture
+        direction: ASC
+  - type: table
+    name: 🔥 Exam priority (high)
+    filters:
+      and:
+        - exam_weight == "high"
+    order:
+      - lecture
+      - file.name
+      - title
+      - status
+    sort:
+      - property: lecture
+        direction: ASC
+  - type: table
+    name: 📝 Still to revise
+    filters:
+      and:
+        - status != "complete"
+    order:
+      - lecture
+      - file.name
+      - title
+      - exam_weight
+      - status
+    sort:
+      - property: exam_weight
+        direction: DESC
+      - property: lecture
+        direction: ASC
+  - type: table
+    name: ✅ Done
+    filters:
+      and:
+        - status == "complete"
+    order:
+      - lecture
+      - file.name
+      - title
+    sort:
+      - property: lecture
+        direction: ASC
+  - type: cards
+    name: Card view
+    order:
+      - file.name
+      - title
+      - exam_weight
+      - status
+    sort:
+      - property: lecture
+        direction: ASC

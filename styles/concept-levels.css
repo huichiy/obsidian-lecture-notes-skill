@@ -1,0 +1,121 @@
+/* ========================================================================
+   concept-levels.css
+   Visual pills for atomic concept level tags (#level/1, #level/2, #level/3)
+   and shorthand chinese tags (#一级 #二级 #三级).
+   Inspired by the "知识图谱" style in popular Obsidian builds.
+
+   Install:
+   1. Copy this file to {YourVault}/.obsidian/snippets/concept-levels.css
+   2. Obsidian → Settings → Appearance → CSS snippets → toggle "concept-levels" ON.
+   3. Optional: install the "Style Settings" plugin to tweak colors from the UI.
+
+   Tag any concept note's body with one of:
+     #level/1  → purple pill  (foundational concept, sits high in the hierarchy)
+     #level/2  → blue pill    (mid-level concept, named idea)
+     #level/3  → red pill     (specific technique, formula, or example)
+   Chinese aliases #一级 / #二级 / #三级 work identically.
+
+   Variables — override via Style Settings or directly in this file.
+   ========================================================================*/
+
+/* @settings
+name: Concept Level Tags
+id: concept-level-tags
+settings:
+  -
+    id: lvl1-color
+    title: Level 1 color (foundational)
+    type: variable-color
+    format: hex
+    default: '#7c3aed'
+  -
+    id: lvl2-color
+    title: Level 2 color (mid-level)
+    type: variable-color
+    format: hex
+    default: '#2563eb'
+  -
+    id: lvl3-color
+    title: Level 3 color (specific)
+    type: variable-color
+    format: hex
+    default: '#dc2626'
+  -
+    id: pill-radius
+    title: Pill corner radius (px)
+    type: variable-number
+    default: 999
+  -
+    id: pill-padding
+    title: Pill horizontal padding (px)
+    type: variable-number
+    default: 10
+*/
+
+.theme-light, .theme-dark {
+  --lvl1-color: #7c3aed;
+  --lvl2-color: #2563eb;
+  --lvl3-color: #dc2626;
+  --pill-radius: 999px;
+  --pill-padding: 10px;
+}
+
+/* Base pill style applied to all level tags */
+a.tag[href="#level/1"],
+a.tag[href="#level/2"],
+a.tag[href="#level/3"],
+a.tag[href="#一级"],
+a.tag[href="#二级"],
+a.tag[href="#三级"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.15em var(--pill-padding);
+  border-radius: var(--pill-radius);
+  font-size: 0.78em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: white !important;
+  border: none !important;
+  text-decoration: none !important;
+  margin-right: 0.25em;
+  vertical-align: middle;
+}
+
+/* Level 1 — foundational concept (purple) */
+a.tag[href="#level/1"],
+a.tag[href="#一级"] {
+  background-color: var(--lvl1-color);
+}
+
+/* Level 2 — named mid-level idea (blue) */
+a.tag[href="#level/2"],
+a.tag[href="#二级"] {
+  background-color: var(--lvl2-color);
+}
+
+/* Level 3 — specific technique / formula / example (red) */
+a.tag[href="#level/3"],
+a.tag[href="#三级"] {
+  background-color: var(--lvl3-color);
+}
+
+/* Hover effect — slight darken */
+a.tag[href^="#level/"]:hover,
+a.tag[href="#一级"]:hover,
+a.tag[href="#二级"]:hover,
+a.tag[href="#三级"]:hover {
+  filter: brightness(0.9);
+  cursor: pointer;
+}
+
+/* Subtle accent on the concept's H1 heading when one of these tags is in YAML.
+   Obsidian doesn't expose YAML tags to CSS directly, so this targets the
+   `type: concept` frontmatter container via Properties panel. */
+.metadata-property[data-property-key="level"] .metadata-property-value:has(.value-string) {
+  font-weight: 600;
+}
+
+/* Optional: highlight the entire concept note's Properties panel with a
+   thin left border colored by level. Requires Properties panel visible.
+   Note: pure CSS can't read property values, so this is a no-op fallback. */
