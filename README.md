@@ -1,23 +1,67 @@
 # Obsidian Lecture Notes Skill
 
-A [Claude Skill](https://docs.claude.com) that turns raw lecture material (PDFs, slide decks, screenshots, or pasted text) into structured Obsidian notes — with Mermaid diagrams, wikilinks for Graph View, YAML frontmatter, flashcards, and a cheat sheet.
+![Workflow](examples/workflow.png)
 
-Built for university students who use Claude + Obsidian as their study stack. Packaged as a folder-format skill for **Claude Code**.
+> **从一份 PDF 到一学期的复习包** · *From one PDF to a semester of revision*
 
-<!-- screenshot suggestions:
-  - Generated lecture note rendered in Obsidian (showing concept block + mermaid diagram)
-  - Exam Map canvas with dotted weak edges + Confident/Weak/Notes zones
-  - Tracker (Bases) view with 5 view tabs
-  - Concept-level CSS pills (#level/1 #level/2 #level/3) on an atomic note
--->
+A [Claude Code skill](https://docs.claude.com/en/docs/claude-code/overview) that turns raw lecture material (PDFs, slide decks, screenshots, or pasted text) into structured Obsidian notes — with Mermaid diagrams, wikilinks for Graph View, YAML frontmatter, flashcards, and a cheat sheet. Built for university students who use Claude + Obsidian as their study stack.
+
+一个 [Claude Code skill](https://docs.claude.com/en/docs/claude-code/overview)，把生 lecture 材料（PDF / PPT / 截图 / 纯文字）转成结构化 Obsidian 笔记 —— 内含 Mermaid 图、Graph View 用的 wikilink、YAML frontmatter、闪卡、cheat sheet。为把 Claude + Obsidian 当作学习工具的大学生设计。
+
+**Jump to / 直达**：[中文简介](#中文简介) · [Why this exists](#why-this-exists) · [Installation](#installation) · [Modes table](#all-available-modes-v13) · [Workflow](docs/workflow.md)
 
 📁 **See [`examples/`](examples/) for sample outputs · [`docs/`](docs/) for workflow & design rationale · [`CHANGELOG.md`](CHANGELOG.md) for version history.**
+📁 **样例见 [`examples/`](examples/) · 工作流与设计依据见 [`docs/`](docs/) · 版本历史见 [`CHANGELOG.md`](CHANGELOG.md)。**
+
+---
+
+## 中文简介
+
+### 这是什么
+
+把大学课件（PDF / PPT / 讲义截图）一键转成 **复习导向** 的 Obsidian 笔记的 Claude Code skill。不是「把 slides 粘到 Obsidian」的那种自动化，而是会自动做以下事：
+
+- 按概念拆成 **6 块结构**：plain-English intro → 自动选型的 Mermaid 图 → 紧凑 table → 记忆钩 → 考点 bullets → worked example
+- 自动按概念类型选 **最合适的 diagram**（公式题选 flowchart、流派比较选 mindmap、流程类选 sequence/state，等等——15+ 种 diagram 决策表）
+- 大量打 `[[wikilink]]`——Graph View 里出现次数多的概念**自动变大**，就是免费的「考点预测」
+- YAML frontmatter 完整，**Obsidian Bases / Dataview 直接能查**
+- 末尾自带 **闪卡 + cheat sheet + self-test**
+
+### 六个 mode 一句话讲完
+
+| Mode | 一句话 | 触发词 |
+|---|---|---|
+| **GENERATE** | 丢 PDF → 拿到一份完整 lecture 笔记 | 丢文件 / "做笔记" / "make notes" |
+| **LINT** | 12 项 health check + 一键 fix | "lint DSF" / "检查我的笔记" |
+| **CANVAS** | 整个科目的知识图谱（含 Exam Map 拖拽变体） | "canvas DSF" / "exam map" |
+| **REVISION** | 多个 lecture 合成一份考前复习包 | "复习包 Lec 03-06" / "revision pack" |
+| **TRACKER** | Obsidian Bases 数据库视图，看 semester 进度 | "tracker DSF" / "进度表" |
+| **EXTRACT-ATOMIC** | 给旧 lecture 补 atomic 概念卡，不重跑 PDF | "extract atomic" / "补 atomic" |
+
+### 完整工作流看顶图
+
+顶部那张图就是从「丢 PDF」到「考前复习」的完整路径——5 步主线 + 5 个分支。中英对照。
+
+### 5 分钟上手
+
+1. 装 [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) 和 [Obsidian](https://obsidian.md)
+2. `git clone` 这个 repo 到 `~/.claude/skills/lecture-notes/`（见 [Installation](#installation)）
+3. 在 Claude Code 里丢一份 lecture PDF + 说「做笔记」
+4. 跟着 skill 的两个 confirm 问题答完，笔记落进 vault
+5. 装 [Advanced Canvas](https://github.com/Developer-Mike/obsidian-advanced-canvas) 和 [Bases](https://help.obsidian.md/bases)（Obsidian 1.9+ 内置）插件，体验完整
+
+### 为什么 worth 装
+
+- **跨学科通用**——CS / 文科 / 医学 / 法律都能用，触发的是「内容类型」规则，不是「科目」规则
+- **opt-in 不污染 vault**——atomic 概念卡不会自动生成 500 个 stub，每次问你要哪些
+- **MOC 自动加行**——生成 lecture 后会主动问你要不要把这一行加进 `{SUBJECT} - MOC.md`，给你看 diff preview
+- **支持中英文 trigger**——「做笔记」「复习包」「检查」都能触发对应 mode
 
 ---
 
 ## Why this exists
 
-University lectures arrive as PDFs and slide decks. Most note workflows fall into one of two failure modes:
+University lectures arrive as PDFs and slide decks. Most note workflows fall into one of two failure modes —
 
 1. **Paste slides into Obsidian** — fast, but useless for revision. No structure, no recall practice, no exam preparation.
 2. **Manually restructure each lecture** — produces good notes, but takes hours per chapter.
@@ -80,7 +124,7 @@ If it doesn't auto-trigger, just say:
 
 The output is a single `.md` file dropped into your Obsidian vault. After delivery, the skill offers to extract atomic concept notes — say which ones (or `all` / `no`) to opt in per lecture.
 
-### All available modes (v1.2)
+### All available modes (v1.3)
 
 | Mode | Trigger phrases | What it does |
 |---|---|---|
@@ -127,7 +171,17 @@ If you don't use Dataview, the template still works as a manual hub page — jus
 
 ## Changelog
 
-**v1.2 (current)**
+**v1.3 (current) — feature-complete milestone**
+- **MOC auto-update in GENERATE** — after saving a lecture, the skill locates `{SUBJECT} - MOC.md`, plans an insertion in lecture-number order, shows a unified-diff preview, writes only after explicit `yes`. Skips MOCs with complex layouts to avoid stomping curated sections.
+- **Atomic note worked-example boost** — atomic concept notes now include block 6 (worked example) in addition to intro + diagram + key points. Usable for cross-lecture revision standalone.
+- **Style Settings variable expansion** — `styles/concept-levels.css` exposes text color, vertical padding, font size/weight, letter spacing, border (width/style/color), drop shadow, uppercase toggle — all tweakable from the Style Settings plugin UI.
+- Closes the planned v1.3 feature-complete checklist. Beyond this the skill enters maintenance mode.
+
+**v1.2.1**
+- Dotted weak edges in Canvas via Advanced Canvas (`styleAttributes.path = "dotted"`).
+- Bases tracker template syntax fix (drop `file.` prefix from YAML property references).
+
+**v1.2**
 - New mode: **TRACKER** — generate `.base` database view from universal template, AI auto-detects subject.
 - New mode: **EXTRACT-ATOMIC** — backfill atomic concept notes from already-generated lecture notes without re-processing PDFs.
 - **CANVAS** gains the Exam Map variant — filters to `exam_weight: high` only and adds Confident / Weak / Notes annotation zones.
