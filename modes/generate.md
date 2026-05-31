@@ -337,10 +337,14 @@ Concepts in this lecture:
 **If user picks some/all**: for each chosen concept, create a short atomic note (under `concepts/` in their vault if known, otherwise alongside the lecture note). Each atomic note contains:
 
 - YAML with `type: concept`, `subject:`, `level:` (1/2/3 — your estimate based on how foundational it is), `parent:`, `tags:`
-- 2-3 sentence definition (the plain-English intro from the lecture note's 6-block)
-- The diagram for this concept (copied from the lecture note)
+- 2-3 sentence definition (the plain-English intro from the lecture note's 6-block, block 1)
+- The diagram for this concept (copied from the lecture note, block 2)
+- A `## Key points` section — bulleted compression of blocks 3–5 (table + memory hook + exam bullets)
+- A `## Worked example` section — copy block 6 from the lecture verbatim (full traced example, trace table, real-number computation, or case-study walkthrough). If the lecture's 6-block lacks block 6, write `_(no worked example in source lecture)_` and don't fabricate.
 - A `## Mentioned in` section listing wikilinks back to lecture notes that reference this concept (currently just this lecture; user / future runs will add more)
 - A `## Related concepts` section with sibling wikilinks
+
+The worked example is what makes atomic notes useful for cross-lecture revision: the user can open `[[K-Means]]` later and see both *what it is* and *how it actually runs* without bouncing back to the source lecture.
 
 **`parent:` rules** — critical for cross-linking to work in Obsidian:
 
@@ -355,3 +359,76 @@ Filename: `[Concept Name].md` (Title Case, as it appears in wikilinks).
 **Do NOT auto-extract** without the user picking. Stub concept files pollute the vault.
 
 **Do NOT redirect users to a separate `lecture-atomic` skill** — atomic note extraction lives inside the GENERATE mode.
+
+## After atomic extraction: offer MOC auto-update (preview-then-write)
+
+Once both the lecture note and any chosen atomic notes are saved, **before ending your turn**, offer to insert the new lecture into its subject MOC. This kills the most common LINT C4 finding ("lecture missing from MOC") and saves the user a manual edit each time.
+
+### Step 1 — Locate the MOC
+
+Search the vault for `{SUBJECT} - MOC.md` (regular hyphen, single spaces, e.g. `DSF - MOC.md`). Typical locations:
+
+1. `{Subject} Note/{SUBJECT} - MOC.md` (most common — matches the per-subject folder convention)
+2. Vault root
+3. Any sibling folder containing other notes for that subject
+
+If **no MOC exists**, skip this whole step. Tell the user: *"No `{SUBJECT} - MOC.md` found in the vault — skipping MOC update. Create one with the MOC template when you're ready."* Then end.
+
+If **multiple MOCs match** (e.g. one in `Test/` and one in `DSF Note/`), pick the one in the same folder family as where the lecture was saved. Don't update both.
+
+### Step 2 — Check if already present
+
+Read the MOC. If the lecture's wikilink (exact filename without `.md`, including any `(new)` suffix) already appears anywhere in the MOC, skip insertion — just report *"Already in `{SUBJECT} - MOC.md`, no update needed."* and end.
+
+### Step 3 — Plan the insertion
+
+Find the lecture-list section in the MOC. Look for headings in this order:
+
+1. `## Lecture Order`
+2. `## Lectures`
+3. `## Lecture List`
+4. `## Order`
+5. Any `##` heading whose body is a list of `[[{SUBJECT} Lec NN — …]]` wikilinks
+
+If none of these exist, **fall back** to appending a new `## Lecture Order` section at the end of the MOC (above any `---` footer if present).
+
+Within the found list, **insert in lecture-number order**. Parse existing entries' lecture numbers from the wikilink text (`[[DSF Lec 04 — …]]` → `04`). Place the new entry so the list stays sorted ascending. If the existing list isn't sorted (the user has manually re-ordered), insert *after* the entry with the highest number lower than the new one — don't re-sort the whole list.
+
+Match the formatting of existing entries exactly:
+
+- If existing rows are `- [[DSF Lec 04 — Topic]] — \`Lec04.pdf\`` → use the same source-filename suffix
+- If existing rows are just `- [[DSF Lec 04 — Topic]]` → use that bare form
+- Same indentation, same bullet character, same trailing whitespace
+
+If the MOC is freshly created with no entries yet, use the bare form: `- [[{SUBJECT} Lec NN — Topic]]`.
+
+### Step 4 — Show diff preview, then ask
+
+Present the planned change as a unified-diff-style preview in chat, **before** writing:
+
+```
+Proposed change to `DSF Note/DSF - MOC.md`:
+
+  ## Lecture Order
+  - [[DSF Lec 03 — Data Preprocessing]] — `Lec03 Data Preprocessing.pdf`
++ - [[DSF Lec 04 — Exploratory Data Analysis (new)]] — `Lec04 EDA.pdf`
+  - [[DSF Lec 05 — Data Mining]] — `Lec05 Data Mining.pdf`
+
+Insert this line? (yes / no / edit)
+```
+
+- `yes` → write the edit using the Edit tool. Confirm: *"✅ Updated `DSF - MOC.md`."*
+- `no` → skip. Don't argue, don't re-prompt.
+- `edit` → ask the user what to change (wikilink form, source filename, placement), then re-show the diff. Loop until `yes` or `no`.
+
+### Constraints — do not violate
+
+- **Single insertion only.** Edit one line in one MOC. Don't reorder existing entries, don't reformat other sections, don't touch the MOC's "Core Threads" or any custom user-curated section.
+- **Never overwrite the MOC**. Use Edit (target the precise insertion point with sufficient surrounding context), not Write.
+- **If the MOC has a complex layout** (Dataview blocks, nested callouts, mixed lecture+concept lists in the same section) and you cannot confidently identify the safe insertion point, skip auto-update and tell the user: *"MOC has a custom layout — auto-insertion isn't safe. Add `[[{filename}]]` manually under the lecture list."* Don't guess.
+- **Don't update any other MOC** (e.g. a cross-subject `Index - MOC.md` or a yearly `2026 - MOC.md`). Only touch `{SUBJECT} - MOC.md`.
+- **No backwards-compat shims.** If the just-saved lecture has a `(new)` suffix because Test sandbox is in use, the wikilink should include the suffix exactly. Don't generate two entries (one with and one without) — the user migrates `(new)` manually later.
+
+### Why this is opt-in per-run, not silent
+
+MOCs accumulate user-curated content over time (intros, study commentary, custom section ordering). A bug in auto-insertion that touches the wrong line can stomp meaningful prose. The diff preview is non-negotiable: cheap on tokens, expensive to skip.

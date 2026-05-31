@@ -2,31 +2,29 @@
 
 Where the skill has been and where it's going.
 
-## Current — v1.2.1 (feature-complete)
+## Current — v1.3 (feature-complete milestone)
 
 Six modes, fully implemented:
 
-- **GENERATE** — lecture material → structured Obsidian note, with opt-in atomic concept extraction at the end.
+- **GENERATE** — lecture material → structured Obsidian note, with opt-in atomic concept extraction + opt-in MOC auto-update (diff-preview before write) at the end.
 - **LINT** — 12 health checks across YAML / wikilinks / MOC / diagrams / prev-next / naming, with interactive auto-fix flow.
 - **CANVAS** — `Knowledge Map` (full overview) and `Exam Map` (filtered to exam-priority + revision drag-zones) variants. Advanced Canvas dotted weak edges.
 - **REVISION** — multi-lecture exam revision pack: TLDR roll-up, high-frequency concepts, merged cheat sheet, exam-likely list, formulas, combined self-test.
 - **TRACKER** — Obsidian Bases (`.base`) database view of all lectures in a subject. Five views: All / Exam Priority / To Revise / Done / Cards.
-- **EXTRACT-ATOMIC** — backfill atomic concept notes from previously generated lecture notes. No PDF re-processing.
+- **EXTRACT-ATOMIC** — backfill atomic concept notes from previously generated lecture notes. No PDF re-processing. Atomic notes carry intro + diagram + key points + **worked example** (block 6) for cross-lecture standalone use.
 
 Plus:
 
 - Universal MOC + Tracker templates (subject-substitutable).
-- CSS snippet for `#level/1` / `#level/2` / `#level/3` concept tag pills (Style Settings compatible).
+- CSS snippet for `#level/1` / `#level/2` / `#level/3` concept tag pills — fully Style-Settings-driven (colors, radius, padding, font size/weight, letter spacing, border, drop shadow, uppercase toggle).
 - Content-type conventions covering formulas / algorithms / code / taxonomies / timelines / schools-of-thought / case studies / people contributions / cause-and-effect / definitions / processes / UML.
 
-## v1.3 — feature-complete milestone
+## Shipped in v1.3 (closing the feature-complete checklist)
 
-Items still worth doing without breaking the architecture:
-
-- **MOC auto-update** — When GENERATE finishes, append the new lecture to `{SUBJECT} - MOC.md` automatically (with a safe diff preview before writing, to avoid stomping user-curated sections).
-- **Atomic-note quality boost** — Currently atomic notes carry the concept's plain-English intro + diagram. v1.3 will also include the worked example (block 6 of the 6-block template) for richer cross-lecture standalone use.
-- **Style Settings expansion** — More CSS variables in the snippet: font family, pill border style, padding, shadow toggle.
-- **Additional content-type rules** — As users hit lectures in subjects we haven't fully covered (e.g. linguistics, music theory), add rules.
+- ✅ **MOC auto-update in GENERATE** — locates `{SUBJECT} - MOC.md`, plans an insertion in lecture-number order matching existing formatting, shows a unified-diff preview, writes only after explicit confirmation. Skips MOCs with complex layouts (Dataview blocks, mixed lists) to avoid stomping user-curated sections.
+- ✅ **Atomic-note quality boost** — atomic notes now include block 6 (worked example) in addition to intro + diagram + key points. Applies in both GENERATE's opt-in extraction and EXTRACT-ATOMIC backfill.
+- ✅ **Style Settings expansion** — text color, vertical padding, font size, font weight, letter spacing, border (width/style/color), drop shadow, uppercase toggle — all exposed in the Style Settings UI.
+- 🔧 **Additional content-type rules** — added on demand as users hit new subjects; treated as patches, not roadmap items.
 
 ## Beyond v1.3 — maintenance mode
 

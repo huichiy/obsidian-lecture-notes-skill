@@ -60,7 +60,7 @@ Filter out one-off mentions to avoid stub-pollution.
 For each candidate the user approved:
 
 1. **Read its source lecture's 6-block** for this concept (find the `### 🧩 [[Concept Name]]` heading and its section).
-2. **Extract** the plain-English intro (block 1) and the diagram (block 2). These become the atomic note body.
+2. **Extract** the plain-English intro (block 1), the diagram (block 2), **and the worked example (block 6)**. These become the atomic note body. The worked example matters: an atomic note without it is just a definition card; *with* it the atomic note stands alone for cross-lecture revision (you can open `[[K-Means]]` and see both *what it is* and *how it actually runs* without bouncing back to the source lecture).
 3. **Determine `level:`** (1/2/3) based on:
    - Level 1: foundational concept that other concepts build on (e.g. Normal Distribution, OOP).
    - Level 2: named mid-level concept (e.g. Box Plot, Class Diagram).
@@ -98,6 +98,10 @@ created: {YYYY-MM-DD}
 ## Key points
 
 {Bulleted compression of blocks 3-5 (table + memory hook + exam bullets), one tight list}
+
+## Worked example
+
+{Copy block 6 from the source lecture verbatim — the full traced example. Trace tables, real-number computations, cause/effect chains, case studies — whatever block 6 contained. If block 6 is missing in the source lecture, write `_(no worked example in source lecture — re-run GENERATE on the source if needed)_` instead of fabricating one.}
 
 ## Mentioned in
 

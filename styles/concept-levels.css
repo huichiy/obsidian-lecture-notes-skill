@@ -7,7 +7,8 @@
    Install:
    1. Copy this file to {YourVault}/.obsidian/snippets/concept-levels.css
    2. Obsidian → Settings → Appearance → CSS snippets → toggle "concept-levels" ON.
-   3. Optional: install the "Style Settings" plugin to tweak colors from the UI.
+   3. Optional: install the "Style Settings" plugin to tweak look from the UI
+      (Settings → Style Settings → Concept Level Tags).
 
    Tag any concept note's body with one of:
      #level/1  → purple pill  (foundational concept, sits high in the hierarchy)
@@ -41,24 +42,107 @@ settings:
     format: hex
     default: '#dc2626'
   -
+    id: pill-text-color
+    title: Pill text color
+    type: variable-color
+    format: hex
+    default: '#ffffff'
+  -
     id: pill-radius
-    title: Pill corner radius (px)
+    title: Pill corner radius (px) — set 4 for chip, 999 for full round
     type: variable-number
     default: 999
   -
-    id: pill-padding
+    id: pill-padding-x
     title: Pill horizontal padding (px)
     type: variable-number
     default: 10
+  -
+    id: pill-padding-y
+    title: Pill vertical padding (em × 100, e.g. 15 = 0.15em)
+    type: variable-number
+    default: 15
+  -
+    id: pill-font-size
+    title: Pill font size (em × 100, e.g. 78 = 0.78em)
+    type: variable-number
+    default: 78
+  -
+    id: pill-font-weight
+    title: Pill font weight (400 = normal, 600 = semibold, 700 = bold)
+    type: variable-number
+    default: 600
+  -
+    id: pill-letter-spacing
+    title: Pill letter spacing (em × 1000, e.g. 20 = 0.02em)
+    type: variable-number
+    default: 20
+  -
+    id: pill-border-width
+    title: Pill border width (px) — set > 0 and pick a border style below
+    type: variable-number
+    default: 0
+  -
+    id: pill-border-style
+    title: Pill border style
+    type: variable-select
+    default: solid
+    options:
+      - solid
+      - dashed
+      - dotted
+      - double
+      - none
+  -
+    id: pill-border-color
+    title: Pill border color (only visible if border width > 0)
+    type: variable-color
+    format: hex
+    default: '#00000033'
+  -
+    id: pill-shadow
+    title: Pill drop shadow
+    type: variable-select
+    default: none
+    options:
+      - none
+      - subtle
+      - medium
+      - strong
+  -
+    id: pill-uppercase
+    title: Uppercase pill text
+    type: variable-select
+    default: 'none'
+    options:
+      - none
+      - uppercase
 */
 
 .theme-light, .theme-dark {
   --lvl1-color: #7c3aed;
   --lvl2-color: #2563eb;
   --lvl3-color: #dc2626;
+  --pill-text-color: #ffffff;
   --pill-radius: 999px;
-  --pill-padding: 10px;
+  --pill-padding-x: 10px;
+  --pill-padding-y: 0.15em;
+  --pill-font-size: 0.78em;
+  --pill-font-weight: 600;
+  --pill-letter-spacing: 0.02em;
+  --pill-border-width: 0px;
+  --pill-border-style: solid;
+  --pill-border-color: #00000033;
+  --pill-shadow: none;
+  --pill-uppercase: none;
 }
+
+/* Shadow presets — Style Settings doesn't support box-shadow directly, so we
+   map the named choice via attribute-style selectors that the plugin sets. */
+body[style*="--pill-shadow: subtle"] { --pill-shadow-value: 0 1px 2px rgba(0,0,0,0.15); }
+body[style*="--pill-shadow: medium"] { --pill-shadow-value: 0 2px 6px rgba(0,0,0,0.25); }
+body[style*="--pill-shadow: strong"] { --pill-shadow-value: 0 4px 12px rgba(0,0,0,0.35); }
+body                                 { --pill-shadow-value: none; }
 
 /* Base pill style applied to all level tags */
 a.tag[href="#level/1"],
@@ -70,16 +154,19 @@ a.tag[href="#三级"] {
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
-  padding: 0.15em var(--pill-padding);
+  padding: var(--pill-padding-y) var(--pill-padding-x);
   border-radius: var(--pill-radius);
-  font-size: 0.78em;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: white !important;
-  border: none !important;
+  font-size: var(--pill-font-size);
+  font-weight: var(--pill-font-weight);
+  letter-spacing: var(--pill-letter-spacing);
+  text-transform: var(--pill-uppercase);
+  color: var(--pill-text-color) !important;
+  border: var(--pill-border-width) var(--pill-border-style) var(--pill-border-color) !important;
   text-decoration: none !important;
   margin-right: 0.25em;
   vertical-align: middle;
+  box-shadow: var(--pill-shadow-value);
+  transition: filter 0.15s ease, transform 0.15s ease;
 }
 
 /* Level 1 — foundational concept (purple) */
@@ -100,22 +187,17 @@ a.tag[href="#三级"] {
   background-color: var(--lvl3-color);
 }
 
-/* Hover effect — slight darken */
+/* Hover effect — slight darken + tiny lift */
 a.tag[href^="#level/"]:hover,
 a.tag[href="#一级"]:hover,
 a.tag[href="#二级"]:hover,
 a.tag[href="#三级"]:hover {
   filter: brightness(0.9);
+  transform: translateY(-1px);
   cursor: pointer;
 }
 
-/* Subtle accent on the concept's H1 heading when one of these tags is in YAML.
-   Obsidian doesn't expose YAML tags to CSS directly, so this targets the
-   `type: concept` frontmatter container via Properties panel. */
+/* Subtle accent on the concept's Properties panel — level value bolded */
 .metadata-property[data-property-key="level"] .metadata-property-value:has(.value-string) {
   font-weight: 600;
 }
-
-/* Optional: highlight the entire concept note's Properties panel with a
-   thin left border colored by level. Requires Properties panel visible.
-   Note: pure CSS can't read property values, so this is a no-op fallback. */

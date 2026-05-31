@@ -2,6 +2,20 @@
 
 All notable changes to the lecture-notes skill. Format roughly follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3] — 2026-05-31 (feature-complete milestone)
+
+### Added
+- **MOC auto-update in GENERATE** — After saving a lecture (and any chosen atomic notes), the skill locates `{SUBJECT} - MOC.md`, finds the lecture list section, plans an insertion in lecture-number order, shows a unified-diff preview, and only writes after explicit `yes`. Eliminates the most common LINT C4 finding ("lecture missing from MOC") for new lectures generated through the skill. Safe-by-design: skips MOCs with complex layouts (Dataview blocks, mixed lists), never touches custom user-curated sections, never overwrites.
+- **Atomic note worked-example boost** — Atomic concept notes now include block 6 (worked example) from the source lecture's 6-block in addition to intro + diagram + key points. An atomic note opened in isolation now shows both *what it is* and *how it actually runs* — usable for cross-lecture revision without bouncing back to the lecture. Applies in both GENERATE's opt-in atomic extraction and EXTRACT-ATOMIC backfill.
+- **Style Settings variable expansion** in `styles/concept-levels.css` — added pill text color, vertical padding, font size, font weight, letter spacing, border width / style / color, drop shadow (none / subtle / medium / strong), uppercase toggle. Existing color + radius + horizontal padding variables retained. All exposed in the Style Settings plugin UI.
+
+### Changed
+- `modes/generate.md`: new "After atomic extraction: offer MOC auto-update" section at the end; atomic-extraction body description updated to spell out the new 4-section structure (intro / diagram / key points / **worked example** / mentioned in / related concepts).
+- `modes/extract-atomic.md`: extraction procedure step 2 now extracts blocks 1, 2, and 6 (was 1 and 2). Atomic note template gains a `## Worked example` section.
+
+### Roadmap
+- This release closes out the planned v1.3 scope (MOC auto-update + atomic quality + Style Settings expansion). v1.3 is the **feature-complete milestone**; beyond this the skill enters maintenance mode (bug fixes, new content-type rules as users hit new subjects, trigger-phrase additions). See `docs/roadmap.md` for the explicit out-of-scope list.
+
 ## [1.2.1] — 2026-05-31
 
 ### Added
